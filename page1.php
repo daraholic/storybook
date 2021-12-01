@@ -2,16 +2,50 @@
     
     include "function.php";
     $dsn="mysql:host=127.0.0.1;charset=utf8;dbname=story";
-    $pdo=new PDO($dsn,'root','root');
-    
-    print_r(find('storys',1));
+    $pdo=new PDO($dsn,'root','');
+    $data = find('storys',1);
 
     
+
+    // dd($data);
 
     // $data = [
     //     ["id"=>"1","src"=>"001.png", "chinese" =>"從前從前...."],
     //     ["id"=>"2","src"=>"1021", "chinese" =>"2222...."],
     // ];
+
+// 萬年曆的切換月份
+    if(isset($_GET['month'])){
+        $month=$_GET['month'];
+        $year=$_GET['year'];  
+
+    }else{
+        $month=date("m");
+        $year=date("Y");
+    }
+    
+    $lastmonth=$month-1;
+    $lastyear=$year;
+
+    $nextmonth=$month+1;
+    $nextyear=$year;
+    
+    if($month==1){
+        $lastmonth=12;
+        $lastyear=$year-1;
+
+        $nextmonth=$month+1;
+        $nextyear=$year;
+
+    }else if($month==12){
+
+        $lastmonth=$month-1;
+        $lastyear=$year;
+
+        $nextmonth=1;
+        $nextyear=$year+1;
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +60,7 @@
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <style>
         .box {
             border: 1px solid black;
@@ -35,20 +69,18 @@
     </style>
 </head>
 
-
 <body>
     <div class="cotainer mt-3">
         <div class="row">
             <div class="col text-center">            
-                <img class="img-fluid" src="./images/<?= $id[1];?>" width="50%" height="50%" alt="page1">
+                <img class="img-fluid" src="./images/<?= $data[0]['src'];?>" width="50%" height="50%" alt="page1">
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-sm-2 text-center">
-                <!-- <button type="button" class="btn btn-primary btn-lg">Primary</button> -->
+                <a href="page1.php?data=PHP&web=W3schools.com"><i class="fas fa-arrow-left display-1"></i></a>
                 
-                <a href="#test123"><i class="fas fa-arrow-left display-1"></i></a>
             </div>
             <div class="col-sm-8 text-center">
                 <div class="box">

@@ -8,7 +8,7 @@ function find($table,$id){
     global $pdo;
     $sql="SELECT * FROM `$table` WHERE `id`='$id'";
 
-    return $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
