@@ -1,50 +1,44 @@
 <?php
-    
-    include "function.php";
-    $dsn="mysql:host=127.0.0.1;charset=utf8;dbname=story";
-    $pdo=new PDO($dsn,'root','');
-    $data = find('storys',1);
 
-    
+include "function.php";
+$dsn = "mysql:host=127.0.0.1;charset=utf8;dbname=story";
+$pdo = new PDO($dsn, 'root', 'root');
+// echo $page;
 
-    // dd($data);
+// dd($data);
 
-    // $data = [
-    //     ["id"=>"1","src"=>"001.png", "chinese" =>"從前從前...."],
-    //     ["id"=>"2","src"=>"1021", "chinese" =>"2222...."],
-    // ];
+// $data = [
+//     ["id"=>"1","src"=>"001.png", "chinese" =>"從前從前...."],
+//     ["id"=>"2","src"=>"1021", "chinese" =>"2222...."],
+// ];
 
-// 萬年曆的切換月份
-    if(isset($_GET['month'])){
-        $month=$_GET['month'];
-        $year=$_GET['year'];  
+// 切換page
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
 
-    }else{
-        $month=date("m");
-        $year=date("Y");
+} else {
+    $page = 1;
+
+}
+$data = find('storys', $page);
+
+if (is_numeric($page)) {
+    if ($page == 1) {
+        $lastpage = 9;
+        $nextpage = $page + 1;
+        $page = 9;
+
+    } else if ($page == 9) {
+        $lastpage = $page - 1;
+        $nextpage = 1;
+        $page = $lastpage;
+        // $data = find('storys',$page);
+
+    } else {
+        $lastpage = $page - 1;
+        $nextpage = $page + 1;
     }
-    
-    $lastmonth=$month-1;
-    $lastyear=$year;
-
-    $nextmonth=$month+1;
-    $nextyear=$year;
-    
-    if($month==1){
-        $lastmonth=12;
-        $lastyear=$year-1;
-
-        $nextmonth=$month+1;
-        $nextyear=$year;
-
-    }else if($month==12){
-
-        $lastmonth=$month-1;
-        $lastyear=$year;
-
-        $nextmonth=1;
-        $nextyear=$year+1;
-    }
+}
 
 ?>
 
@@ -60,7 +54,8 @@
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./css/style.css">
     <style>
         .box {
             border: 1px solid black;
@@ -72,42 +67,52 @@
 <body>
     <div class="cotainer mt-3">
         <div class="row">
-            <div class="col text-center">            
-                <img class="img-fluid" src="./images/<?= $data[0]['src'];?>" width="50%" height="50%" alt="page1">
+            <div class="col text-center">
+                <img class="img-fluid" src="./images/<?=$data[0]['imges'];?>" width="50%" height="50%" alt="page1">
             </div>
         </div>
         <br>
         <div class="row">
-            <div class="col-sm-2 text-center">
-                <a href="page1.php?data=PHP&web=W3schools.com"><i class="fas fa-arrow-left display-1"></i></a>
-                
+            <div class="col-sm-3 text-right">
+                <a href="page1.php?page=<?=$lastpage;?>"><i class="far fa-arrow-alt-circle-left fa-3x"></i></a>
+
             </div>
-            <div class="col-sm-8 text-center">
-                <div class="box">
+
+            <div class="col-sm-6 text-center">
+                <!-- <div class="box"> -->
                     <p>
-                        <?= $data[0]['chinese'];?>
+                        <p class="font-weight-bold">第&nbsp;<?=$data[0]['id'];?>&nbsp;話</p>
+                        
+                        <?=$data[0]['chinese'];?>
                     </p>
-                </div>
+                    <button type="button" class="btn-outline-dark" data-toggle="collapse" data-target="#demo">Click here to see English translation</button>
+                        <div id="demo" class="collapse"><?=$data[0]['english'];?>
+                              </div>
+                <!-- </div> -->
             </div>
-            <div class="col-sm-2 text-center align-self-sm-center">
-                <!-- <button type="button" class="btn btn-primary">Primary</button> -->
-                <a href="#test555"><i class="fas fa-arrow-right display-1"></i></a>
+            <div class="col-sm-3 text-left">
+                <a href="page1.php?page=<?=$nextpage;?>"><i class="far fa-arrow-alt-circle-right fa-3x"></i></a>
             </div>
         </div>
+
     </div>
-    <br><br><br>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
-        integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
-        crossorigin="anonymous"></script>
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+            integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
+            crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                $(".nav-tabs a").click(function () {
+                    $(this).tab('show');
+                });
+            });
+        </script>
 </body>
 
 </html>
