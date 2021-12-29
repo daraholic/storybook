@@ -1,16 +1,5 @@
-<?php
+<?php include "function.php";
 
-include "function.php";
-$dsn = "mysql:host=127.0.0.1;charset=utf8;dbname=story";
-$pdo = new PDO($dsn, 'root', '');
-// echo $page;
-
-// dd($data);
-
-// $data = [
-//     ["id"=>"1","src"=>"001.png", "chinese" =>"從前從前...."],
-//     ["id"=>"2","src"=>"1021", "chinese" =>"2222...."],
-// ];
 
 // 切換page
 if (isset($_GET['page'])) {
@@ -18,11 +7,13 @@ if (isset($_GET['page'])) {
 } else {
     $page = 1;
 }
+
 $data = find('storys', $page);
+
 
 if (is_numeric($page)) {
     if ($page == 1) {
-        $lastpage = 9;
+        $lastpage = 1;
         $nextpage = $page + 1;
         $page = 9;
     } else if ($page == 9) {
@@ -43,7 +34,6 @@ if (isset($_GET['lang'])) {
     $lang = 'chinese';
 }
 $lang = find('storys', $lang);
-// dd($lang);
 
 ?>
 
@@ -67,40 +57,58 @@ $lang = find('storys', $lang);
 </head>
 
 <body>
+
     <div class="cotainer mt-3">
+    <div class="col-sm-6 text-center">
+                <button class="btn btn-outline-dark" id="redBtn">中文</button>
+                <button class="btn btn-outline-secondary" id="greenBtn">English</button>
+
+            </div>
         <div class="row">
+        
             <div class="col text-center">
-                <a href="page1.php?lang=<?= $lang; ?>"><i class="fas fa-language"></i></a>
+
+
+
+            
+                <!-- <a href="page1.php?lang=<?= $lang; ?>"><i class="fas fa-language"></i></a> -->
+
+
+
+
                 <img class="img-fluid" src="./images/<?= $data[0]['imges']; ?>" width="40%" height="40%" alt="page1">
             </div>
         </div>
         <br>
         <div class="row">
+            <!-- 切換左邊的頁面 -->
             <div class="col-sm-3 text-right">
+    
                 <a href="page1.php?page=<?= $lastpage; ?>"><i class="far fa-arrow-alt-circle-left fa-3x" style="color:green"></i></a>
-
             </div>
 
             <div class="col-sm-6 text-center">
                 <!-- <div class="box"> -->
                 <p>
                 <p class="font-weight-bold">第&nbsp;<?= $data[0]['id']; ?>&nbsp;話</p>
-
-                <?= $data[0]['chinese']; ?>
+                <p id="chinese">
+                    <?= $data[0]['chinese']; ?>
                 </p>
-                <!-- <button type="button" class="btn-outline-light btn-lg text-muted" data-toggle="collapse" data-target="#demo">Click here to see English translation</button>
-                <div id="demo" class="collapse"><?= $data[0]['english'] .$lang['chinese'] ; ?>
-                </div> -->
 
-                <p>
+                <p id="english">
+                <?= $data[0]['english']; ?>
+    </p>
+
+                <!-- <p>
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Click here to see English translation
                     </button>
-                </p>
+                </p> -->
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body">
                     <?= $data[0]['english']; ?>
                     </div>
+                    
                 </div>
 
 
@@ -109,6 +117,7 @@ $lang = find('storys', $lang);
             <div class="col-sm-3 text-left">
                 <a href="page1.php?page=<?= $nextpage; ?>"><i class="far fa-arrow-alt-circle-right fa-3x" style="color:green"></i></a>
             </div>
+            
         </div>
 
     </div>
@@ -117,10 +126,39 @@ $lang = find('storys', $lang);
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function() {
-            $(".nav-tabs a").click(function() {
-                $(this).tab('show');
+        $(document).ready(function () {
+            // 寫一個函式叫做清掉所有效果 (重構)
+            function removeAllClass() {
+                $("#chinese , #english").show();
+                $("button").removeClass("btn-success btn-danger");
+                $("tr").removeClass("table-danger table-success");
+                $("h2").removeClass("text-danger text-success");
+                $('h2').text("hello");
+            }
+            
+            // 使用這個函式
+            $('button').click(function () {
+                removeAllClass();
             });
+
+            $("#redBtn").click(function () {
+                $("#english").hide();
+
+                $("#redBtn").addClass("btn-light");
+                // $("tr:nth-child(even)").addClass("table-danger");
+
+            });
+
+            $("#greenBtn").click(function () {
+                $("#chinese").hide();
+
+                $("#greenBtn").addClass("btn-light");
+
+                // 語法可以估狗查一下
+                // $('tr:not(":has(th)"):even').addClass("table-success");
+            });
+
+
         });
     </script>
 </body>
